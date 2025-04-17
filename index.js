@@ -15,7 +15,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
       p4 = p4.split(/\n|\r|\r\n/);
       let admonitionContent = '';
       for (const v of p4) {
-        admonitionContent += v.trim() + '\n';
+        admonitionContent += v.trim() + '\n\n';
       }
 
       if (p3.replace(/\s+/g, '') === '""') {
