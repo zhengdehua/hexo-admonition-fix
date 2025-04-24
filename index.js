@@ -1,10 +1,7 @@
-var md = require('markdown-it')('commonmark');
+var md = require('markdown-it')();
 
 hexo.extend.filter.register('before_post_render', function (data) {
-  // let strRegExp = '(?<=^\n)(^!!! *)(note|info|todo|warning|attention|caution|failure|missing|fail|error)(.*\n)((^ {4}.*\n|^\n)+)';
-
-  // Change to directly start without being after newline
-  let strRegExp = '(^!!! *)(note|info|todo|warning|attention|caution|failure|missing|fail|error)(.*\n)((^ {2}.*\n|^\n)+)';
+  let strRegExp = '(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)';
   let admonitionRegExp = new RegExp(strRegExp, 'gmi');
 
   let strData;
@@ -12,10 +9,19 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
     strData = data.content.replace(admonitionRegExp, function (matchStr, p1, p2, p3, p4) {
 
+      let tableLineRegExp = new RegExp('^\\|(.*\\|)+$');
       p4 = p4.split(/\n|\r|\r\n/);
       let admonitionContent = '';
+
       for (const v of p4) {
-        admonitionContent += v.trim() + '\n\n';
+        let line = v.trim();
+
+        if (tableLineRegExp.test(line)) {
+          admonitionContent += line + '\n';
+          continue;
+        }
+
+        admonitionContent += line + '\n\n';
       }
 
       if (p3.replace(/\s+/g, '') === '""') {
@@ -25,6 +31,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         return '<div class="admonition ' + p2.toLowerCase() + '"><p class="admonition-title">' + p3 + '</p>' + md.render(admonitionContent) + '</div>\n\n';
       }
     });
+
     data.content = strData;
   }
 
