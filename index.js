@@ -1,4 +1,6 @@
-var md = require('markdown-it')();
+var md = require('markdown-it')({
+  html: true // enable HTML tags in source
+});
 
 hexo.extend.filter.register('before_post_render', function (data) {
   let strRegExp = '(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)';
