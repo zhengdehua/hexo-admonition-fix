@@ -16,14 +16,12 @@ hexo.extend.filter.register('before_post_render', function (data) {
       let admonitionContent = '';
 
       for (const v of p4) {
-        let line = v.trim();
-
-        if (tableLineRegExp.test(line)) {
-          admonitionContent += line + '\n';
+        if (tableLineRegExp.test(v)) {
+          admonitionContent += v + '\n';
           continue;
         }
 
-        admonitionContent += line + '\n\n';
+        admonitionContent += v + '\n\n';
       }
 
       if (p3.replace(/\s+/g, '') === '""') {
