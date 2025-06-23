@@ -16,8 +16,8 @@ hexo.extend.filter.register('before_post_render', function (data) {
       let admonitionContent = '';
 
       for (const v of p4) {
-        if (tableLineRegExp.test(v)) {
-          admonitionContent += v + '\n';
+        if (tableLineRegExp.test(v.trim())) {
+          admonitionContent += v.trim() + '\n';
           continue;
         }
 
