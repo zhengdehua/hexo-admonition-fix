@@ -1,6 +1,7 @@
 # hexo-admonition-plus 使用指南
-本插件是对 hexo-admonition 的增强，具体如下：
+本插件是对 hexo-admonition 的改写，具体如下：
 
+- 对整体代码进行了重构；
 - 取消了必须要在空行之后开始；
 - 缩进改为了2个空格；
 - 修复了内容不换行问题；
