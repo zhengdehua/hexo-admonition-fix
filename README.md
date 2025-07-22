@@ -1,4 +1,4 @@
-# hexo-admonition-plus 使用指南
+# hexo-admonition-fix 使用指南
 本插件是对 hexo-admonition 的改写，具体如下：
 
 - 对整体代码进行了重构；

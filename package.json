@@ -1,12 +1,12 @@
 {
-  "name": "hexo-admonition-plus",
-  "version": "1.4.4",
+  "name": "hexo-admonition-fix",
+  "version": "1.0.0",
   "description": "Add block-styled admonition to hexo, e.g. note, warning or error. | Hexo内容辅助插件，支持向文档中添加如提示、警告、错误等块式内容。",
   "homepage": "https://github.com/zhengdehua/",
   "main": "index",
   "author": "https://github.com/zhengdehua/",
   "bugs": {
-    "url": "https://github.com/zhengdehua/hexo-admonition-plus/issues"
+    "url": "https://github.com/zhengdehua/hexo-admonition-fix/issues"
   },
   "keywords": [
     "hexo",
@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zhengdehua/hexo-admonition-plus.git"
+    "url": "git+https://github.com/zhengdehua/hexo-admonition-fix.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
