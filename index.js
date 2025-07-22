@@ -35,7 +35,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         content += '\n' + v + '\n';
       }
 
-      let renderedContent = md.parse(admonitionContent);
+      let renderedContent = md.parse(content);
 
       if (p3.replace(/\s+/g, '') === '""') {
         return '<div class="admonition ' + p2.toLowerCase() + '">' + renderedContent + '</div>\n\n';
