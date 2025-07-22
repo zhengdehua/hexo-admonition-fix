@@ -1,5 +1,7 @@
 'use strict';
 
+var md = require('marked');
+
 hexo.extend.filter.register('before_post_render', function (data) {
   let strRegExp = '(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)';
   let admonitionRegExp = new RegExp(strRegExp, 'gmi');
@@ -33,7 +35,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         content += '\n' + v + '\n';
       }
 
-      let renderedContent = hexo.render.renderSync({text: content, engine: 'markdown'});
+      let renderedContent = md.parse(admonitionContent);
 
       if (p3.replace(/\s+/g, '') === '""') {
         return '<div class="admonition ' + p2.toLowerCase() + '">' + renderedContent + '</div>\n\n';
