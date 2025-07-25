@@ -28,6 +28,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         if (quoteLineRegExp.test(v.trim())) {
+          content = content.replace(/(<br\s*\/?>)+$/gi, '\n');
           content += v + '<br>';
           continue;
         }
