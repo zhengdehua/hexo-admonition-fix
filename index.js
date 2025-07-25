@@ -3,8 +3,7 @@
 var md = require('marked');
 
 hexo.extend.filter.register('before_post_render', function (data) {
-  let strRegExp = '(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)';
-  let admonitionRegExp = new RegExp(strRegExp, 'gmi');
+  let admonitionRegExp = new RegExp('(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)', 'gmi');
   let htmlContent;
 
   if (admonitionRegExp.test(data.content)) {
@@ -17,6 +16,12 @@ hexo.extend.filter.register('before_post_render', function (data) {
       let content = '';
 
       for (const v of p4) {
+        if (v.trim() == '') {
+          content = content.replace(/(<br\/?>)+$/gi, '');
+          content += '\n\n';
+          continue;
+        }
+
         if (tableLineRegExp.test(v.trim())) {
           content += v.trim() + '\n';
           continue;
@@ -28,14 +33,21 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         if (quoteLineRegExp.test(v.trim())) {
-          content = content.replace(/(<br\s*\/?>)+$/gi, '\n');
-          content += v + '<br>';
+          content = content.replace(/(<br\/?>)+$/gi, '');
+          content += '\n' + v + '<br>';
           continue;
         }
 
-        content += '\n' + v + '\n';
+        if (content == '' || content.endsWith('\n\n')) {
+          content += v;
+          continue;
+        }
+
+        content = content.replace(/(<br\/?>)+$/gi, '');
+        content += '<br>' + v;
       }
 
+      content = content.replace(/(<br\/?>)+$/gi, '');
       let renderedContent = md.parse(content);
 
       if (p3.replace(/\s+/g, '') === '""') {
