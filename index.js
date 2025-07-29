@@ -2,6 +2,10 @@
 
 var md = require('marked');
 
+var removeLastNewLine = function(line) {
+  return line.replace(/<br\/?>$/i, '');
+};
+
 hexo.extend.filter.register('before_post_render', function (data) {
   let admonitionRegExp = new RegExp('(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)', 'gmi');
   let htmlContent;
@@ -9,6 +13,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
   if (admonitionRegExp.test(data.content)) {
     htmlContent = data.content.replace(admonitionRegExp, function (matchedContent, p1, p2, p3, p4) {
 
+      let newLineRegExp = new RegExp(/(<br\/?>)+/i);
       let tableLineRegExp = new RegExp('^\\|(.*\\|)+$');
       let listLineRegExp = new RegExp('^-.*');
       let quoteLineRegExp = new RegExp('^>.*');
@@ -17,8 +22,12 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
       for (const v of p4) {
         if (v.trim() == '') {
-          content = content.replace(/(<br\/?>)+$/gi, '');
-          content += '\n\n';
+          content = removeLastNewLine(content) + '\n\n';
+          continue;
+        }
+
+        if (newLineRegExp.test(v.trim())) {
+          content = removeLastNewLine(content) + v;
           continue;
         }
 
@@ -33,8 +42,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         if (quoteLineRegExp.test(v.trim())) {
-          content = content.replace(/(<br\/?>)+$/gi, '');
-          content += '\n' + v + '<br>';
+          content = removeLastNewLine(content) + '\n' + v + '<br>';
           continue;
         }
 
@@ -43,12 +51,10 @@ hexo.extend.filter.register('before_post_render', function (data) {
           continue;
         }
 
-        content = content.replace(/(<br\/?>)+$/gi, '');
-        content += '<br>' + v;
+        content = removeLastNewLine(content) + '<br>' + v;
       }
 
-      content = content.replace(/(<br\/?>)+$/gi, '');
-      let renderedContent = md.parse(content);
+      let renderedContent = md.parse(removeLastNewLine(content));
 
       if (p3.replace(/\s+/g, '') === '""') {
         return '<div class="admonition ' + p2.toLowerCase() + '">' + renderedContent + '</div>\n\n';
