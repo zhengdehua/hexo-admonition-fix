@@ -27,7 +27,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         if (newLineRegExp.test(v.trim())) {
-          content = removeLastNewLine(content) + v;
+          content = removeLastNewLine(content) + v + '\n';
           continue;
         }
 
