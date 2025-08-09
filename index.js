@@ -1,5 +1,7 @@
 'use strict';
 
+var marked = require('marked');
+
 var css = `
 .admonition {
   padding-left: 0.5em !important;
@@ -158,6 +160,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
       }
 
       block = removeLastBr(block);
+      block = marked.parse(block);
 
       if (p3.replace(/\s+/g, '') === '""') {
         return '<div class="admonition ' + p2.toLowerCase() + '">' + block + '</div>\n\n';
