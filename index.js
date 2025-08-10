@@ -92,6 +92,7 @@ const mathList = []; // 存储提取的公式
 // 替换数学公式
 var replaceMath = function(content) {
   const mathPattern = /(\$\$.*?\$\$|\$.*?\$)/gs; // 匹配块级和行内公式
+  mathList.length = 0; // 清空之前的公式列表
 
   content = content.replace(mathPattern, (match) => {
     mathList.push(match);
@@ -116,8 +117,11 @@ hexo.extend.filter.register('before_post_render', function (data) {
   let tableLineRegExp = new RegExp('^\\|(.*\\|)+$');
   let listLineRegExp = new RegExp('^-.*');
   let quoteLineRegExp = new RegExp('^>.*');
+  let canReplace = data.mathjax || hexo.config.mathjax.every_page;
 
-  data.content = replaceMath(data.content);
+  if (canReplace) {
+    data.content = replaceMath(data.content);
+  }
 
   if (admonitionRegExp.test(data.content)) {
     data.content = data.content.replace(admonitionRegExp, function (matchedContent, p1, p2, p3, p4) {
@@ -172,6 +176,9 @@ hexo.extend.filter.register('before_post_render', function (data) {
     });
   }
 
-  data.content = recoverMath(data.content);
+  if (canReplace) {
+    data.content = recoverMath(data.content);
+  }
+
   return data;
 });
