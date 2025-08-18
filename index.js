@@ -78,9 +78,10 @@ p.admonition-title {
 }
 `;
 
-// 注册CSS辅助函数
-hexo.extend.helper.register('hexo_admonition_css', function() {
-  return css;
+// 直接注入CSS内容到网站的head中
+hexo.extend.filter.register('after_generate', function() {
+  // 直接注入CSS内容到文章页面的head中
+  this.extend.injector.register('head_end', `<style>${css}</style>`, 'post');
 });
 
 var removeLastBr = function(line) {
@@ -117,7 +118,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
   let tableLineRegExp = new RegExp('^\\|(.*\\|)+$');
   let listLineRegExp = new RegExp('^-.*');
   let quoteLineRegExp = new RegExp('^>.*');
-  let canReplace = data.mathjax || hexo.config.mathjax.every_page;
+  let canReplace = data.mathjax || hexo.theme.config.math.per_page;
 
   if (canReplace) {
     data.content = replaceMath(data.content);
