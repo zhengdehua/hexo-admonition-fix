@@ -18,20 +18,9 @@ var css = `
 p.admonition-title {
   position: relative;
   margin: -.6rem -.6rem .8em -.6rem !important;
-  padding: .4rem .6rem .4rem 2.5rem;
+  padding: .4rem .6rem .4rem 1rem;
   font-weight: 700;
   background-color: rgba(66, 185, 131, .1);
-}
-
-.admonition-title::before {
-  position: absolute;
-  top: .9rem;
-  left: 1rem;
-  width: 12px;
-  height: 12px;
-  background-color: #42b983;
-  border-radius: 50%;
-  content: ' ';
 }
 
 .info>.admonition-title {
