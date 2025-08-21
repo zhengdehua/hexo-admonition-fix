@@ -104,9 +104,9 @@ var recoverMath = function(content) {
 hexo.extend.filter.register('before_post_render', function (data) {
   let admonitionRegExp = new RegExp('(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)', 'gmi');
   let lastBrRegExp = new RegExp(/(<br\/?>)+/i);
-  let tableLineRegExp = new RegExp('^\\|(.*\\|)+$');
-  let listLineRegExp = new RegExp('^-.*');
-  let quoteLineRegExp = new RegExp('^>.*');
+  let tableLineRegExp = new RegExp('^\s*\|(.*\|)+');
+  let listLineRegExp = new RegExp('^\s*-.*');
+  let quoteLineRegExp = new RegExp('^\s*>.*');
   let canReplace = data.mathjax || hexo.theme.config.math.per_page;
 
   if (canReplace) {
@@ -117,40 +117,43 @@ hexo.extend.filter.register('before_post_render', function (data) {
     data.content = data.content.replace(admonitionRegExp, function (matchedContent, p1, p2, p3, p4) {
       p4 = p4.split(/\n|\r|\r\n/);
       let block = '';
+      let line = '';
 
       for (const v of p4) {
+        line = v.replace(/^ {2}/, '');
+
         if (block == '' || block.endsWith('\n\n')
-          || block.endsWith('{% raw %}') || v.trim() == '{% endraw %}') {
-          block += v;
+          || block.endsWith('{% raw %}') || line == '{% endraw %}') {
+          block += line;
           continue;
         }
 
-        if (v.trim() == '') {
+        if (line == '') {
           block = removeLastBr(block) + '\n\n';
           continue;
         }
 
-        if (lastBrRegExp.test(v.trim())) {
-          block = removeLastBr(block) + v + '\n';
+        if (lastBrRegExp.test(line)) {
+          block = removeLastBr(block) + line + '\n';
           continue;
         }
 
-        if (tableLineRegExp.test(v.trim())) {
-          block += v.trim() + '\n';
+        if (tableLineRegExp.test(line)) {
+          block += '\n' + line;
           continue;
         }
 
-        if (listLineRegExp.test(v.trim())) {
-          block += '\n' + v + '<br>';
+        if (listLineRegExp.test(line)) {
+          block += '\n' + line + '<br>';
           continue;
         }
 
-        if (quoteLineRegExp.test(v.trim())) {
-          block = removeLastBr(block) + '\n' + v + '<br>';
+        if (quoteLineRegExp.test(line)) {
+          block = removeLastBr(block) + '\n' + line + '<br>';
           continue;
         }
 
-        block = removeLastBr(block) + '<br>' + v;
+        block = removeLastBr(block) + '<br>' + line;
       }
 
       block = removeLastBr(block);
