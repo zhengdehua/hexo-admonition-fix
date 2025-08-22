@@ -134,7 +134,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         if (lastBrRegExp.test(line)) {
-          block = removeLastBr(block) + line + '\n';
+          block = removeLastBr(block) + line;
           continue;
         }
 
