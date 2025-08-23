@@ -123,7 +123,8 @@ hexo.extend.filter.register('before_post_render', function (data) {
         line = v.replace(/^ {2}/, '');
 
         if (block == '' || block.endsWith('\n\n')
-          || block.endsWith('{% raw %}') || line == '{% endraw %}') {
+          || block.endsWith('{% raw %}') || line == '{% endraw %}'
+          || block.endsWith('</hexoPostRenderCodeBlock>')) {
           block += line;
           continue;
         }
@@ -134,7 +135,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         if (lastBrRegExp.test(line)) {
-          block = removeLastBr(block) + line;
+          block = removeLastBr(block) + '<br>' + line;
           continue;
         }
 
