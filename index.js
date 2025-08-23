@@ -102,11 +102,11 @@ var recoverMath = function(content) {
 };
 
 hexo.extend.filter.register('before_post_render', function (data) {
-  let admonitionRegExp = new RegExp('(^!!! *)(note|info|warning|error)(.*\n)((^ {2}.*\n|^\n)+)', 'gmi');
-  let lastBrRegExp = new RegExp(/(<br\/?>)+/i);
-  let tableLineRegExp = new RegExp('^\s*\|(.*\|)+');
-  let listLineRegExp = new RegExp('^\s*-.*');
-  let quoteLineRegExp = new RegExp('^\s*>.*');
+  let admonitionRegExp = new RegExp('(^!!! *)(note|info|warning|error)(.*\\n)((^ {2}.*\\n|^\\n)+)', 'gmi');
+  let lastBrRegExp = new RegExp('(<br\/?>)+', 'i');
+  let tableLineRegExp = new RegExp('^\\s*\\|(.*\\|)+');
+  let listLineRegExp = new RegExp('^\\s*-.*');
+  let quoteLineRegExp = new RegExp('^\\s*>.*');
   let canReplace = data.mathjax || hexo.theme.config.math.per_page;
 
   if (canReplace) {
