@@ -129,7 +129,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         if (block.endsWith('</hexoPostRenderCodeBlock>')) {
-          block += '\n' + line;
+          block += '\n\n' + line;
           continue;
         }
 
