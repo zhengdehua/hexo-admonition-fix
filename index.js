@@ -105,6 +105,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
   let admonitionRegExp = new RegExp('(^!!! *)(note|info|warning|error)(.*\\n)((^ {2}.*\\n|^\\n)+)', 'gmi');
   let lastBrRegExp = new RegExp('(<br\/?>)+', 'i');
   let tableLineRegExp = new RegExp('^\\s*\\|(.*\\|)+');
+  let tableSuffixRegExp = new RegExp('\\s*\\|(.*\\|)+$');
   let listLineRegExp = new RegExp('^\\s*-.*');
   let quoteLineRegExp = new RegExp('^\\s*>.*');
   let canReplace = data.mathjax || hexo.theme.config.math.per_page;
@@ -155,6 +156,12 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
         if (quoteLineRegExp.test(line)) {
           block = removeLastBr(block) + '\n' + line + '<br>';
+          continue;
+        }
+
+        // 处理表格的结尾
+        if (tableSuffixRegExp.test(block)) {
+          block += '\n\n' + line;
           continue;
         }
 
