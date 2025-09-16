@@ -102,12 +102,13 @@ var recoverMath = function(content) {
 };
 
 hexo.extend.filter.register('before_post_render', function (data) {
-  let admonitionRegExp = new RegExp('(^!!! *)(note|info|warning|error)(.*\\n)((^ {2}.*\\n|^\\n)+)', 'gmi');
+  let admonitionRegExp = new RegExp('(^!!!\\s*)(note|info|warning|error)(.*\\n)((^\\s{2}.*\\n)+)', 'gmi');
   let lastBrRegExp = new RegExp('(<br\/?>)+', 'i');
   let tableLineRegExp = new RegExp('^\\s*\\|(.*\\|)+');
   let tableSuffixRegExp = new RegExp('\\s*\\|(.*\\|)+$');
   let listLineRegExp = new RegExp('^\\s*-.*');
-  let quoteLineRegExp = new RegExp('^\\s*>.*');
+  let quoteLine1RegExp = new RegExp('^\\s*>\\s*.*');
+  let quoteLine2RegExp = new RegExp('\\s*>\\s*$');
   let canReplace = data.mathjax || hexo.theme.config.math.per_page;
 
   if (canReplace) {
@@ -134,37 +135,48 @@ hexo.extend.filter.register('before_post_render', function (data) {
           continue;
         }
 
-        if (line == '') {
-          block = removeLastBr(block) + '\n\n';
-          continue;
-        }
-
-        if (lastBrRegExp.test(line)) {
-          block = removeLastBr(block) + '<br>' + line;
-          continue;
-        }
-
+        // 处理表格的每一行
         if (tableLineRegExp.test(line)) {
           block = removeLastBr(block) + '\n' + line;
           continue;
         }
 
+        // 处理表格的结尾，只要上面的表格还没结束，就不会到达这里
+        if (tableSuffixRegExp.test(block)) {
+          block += '\n\n';
+        }
+
+        // 处理列表行
         if (listLineRegExp.test(line)) {
           block += '\n' + line + '<br>';
           continue;
         }
 
-        if (quoteLineRegExp.test(line)) {
+        // 处理引用行，针对 > 后面有内容的情况
+        if (quoteLine1RegExp.test(line)) {
           block = removeLastBr(block) + '\n' + line + '<br>';
           continue;
         }
 
-        // 处理表格的结尾
-        if (tableSuffixRegExp.test(block)) {
-          block += '\n\n' + line;
+        // 处理引用行，针对 > 后面没有内容的情况
+        if (quoteLine2RegExp.test(removeLastBr(block))) {
+          block = removeLastBr(block) + line;
           continue;
         }
 
+        // 处理空行，表示段落结束
+        if (line == '') {
+          block = removeLastBr(block) + '\n\n';
+          continue;
+        }
+
+        // 处理末尾有<br>的行
+        if (lastBrRegExp.test(line)) {
+          block = removeLastBr(block) + '<br>' + line;
+          continue;
+        }
+
+        // 其他情况，表示是同一段落的内容
         block = removeLastBr(block) + '<br>' + line;
       }
 
