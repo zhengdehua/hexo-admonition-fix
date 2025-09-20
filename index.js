@@ -74,8 +74,14 @@ hexo.extend.filter.register('after_generate', function() {
 });
 
 var removeLastBr = function(line) {
-  return line.replace(/<br\/?>$/i, '');
+  const lastBrRegExp = /<br\/?>$/i;
+  return line.replace(lastBrRegExp, '');
 };
+
+var removeLastBrs = function(line) {
+  const allLastBrRegExp = /(<br\/?>)+$/i;
+  return line.replace(allLastBrRegExp, '');
+}
 
 const mathList = []; // 存储提取的公式
 
@@ -103,12 +109,11 @@ var recoverMath = function(content) {
 
 hexo.extend.filter.register('before_post_render', function (data) {
   let admonitionRegExp = new RegExp('(^!!!\\s*)(note|info|warning|error)(.*\\n)((^\\s{2}.*\\n)+)', 'gmi');
-  let lastBrRegExp = new RegExp('(<br\/?>)+', 'i');
-  let tableLineRegExp = new RegExp('^\\s*\\|(.*\\|)+');
-  let tableSuffixRegExp = new RegExp('\\s*\\|(.*\\|)+$');
-  let listLineRegExp = new RegExp('^\\s*-.*');
-  let quoteLine1RegExp = new RegExp('^\\s*>\\s*.*');
-  let quoteLine2RegExp = new RegExp('\\s*>\\s*$');
+  let tableLineRegExp = new RegExp('^\\s*\\|(.+\\|)+$');
+  let tableSuffixRegExp = new RegExp('\\s*\\|(.+\\|)+$');
+  let listLineRegExp = new RegExp('^\\s*-.+$');
+  let quoteLine1RegExp = new RegExp('^\\s*>\\s*.+$');
+  let quoteLine2RegExp = new RegExp('^\\s*>\\s*$');
   let canReplace = data.mathjax || hexo.theme.config.math.per_page;
 
   if (canReplace) {
@@ -122,7 +127,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
       let line = '';
 
       for (const v of p4) {
-        line = v.replace(/^ {2}/, '');
+        line = v.replace(/^ {2}/, ''); // 去除插件本身的缩进空格
 
         if (block == '' || block.endsWith('\n\n')
           || block.endsWith('{% raw %}') || line == '{% endraw %}') {
@@ -137,13 +142,14 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
         // 处理表格的每一行
         if (tableLineRegExp.test(line)) {
-          block = removeLastBr(block) + '\n' + line;
+          block = removeLastBrs(block) + '\n' + line;
           continue;
         }
 
         // 处理表格的结尾，只要上面的表格还没结束，就不会到达这里
         if (tableSuffixRegExp.test(block)) {
-          block += '\n\n';
+          block += '\n\n' + line;
+          continue;
         }
 
         // 处理列表行
@@ -154,13 +160,13 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
         // 处理引用行，针对 > 后面有内容的情况
         if (quoteLine1RegExp.test(line)) {
-          block = removeLastBr(block) + '\n' + line + '<br>';
+          block = removeLastBrs(block) + '\n' + line + '<br>';
           continue;
         }
 
         // 处理引用行，针对 > 后面没有内容的情况
-        if (quoteLine2RegExp.test(removeLastBr(block))) {
-          block = removeLastBr(block) + line;
+        if (quoteLine2RegExp.test(line)) {
+          block = removeLastBrs(block) + line;
           continue;
         }
 
@@ -170,17 +176,11 @@ hexo.extend.filter.register('before_post_render', function (data) {
           continue;
         }
 
-        // 处理末尾有<br>的行
-        if (lastBrRegExp.test(line)) {
-          block = removeLastBr(block) + '<br>' + line;
-          continue;
-        }
-
         // 其他情况，表示是同一段落的内容
         block = removeLastBr(block) + '<br>' + line;
       }
 
-      block = removeLastBr(block);
+      block = removeLastBrs(block);
       block = marked.parse(block);
 
       if (p3.replace(/\s+/g, '') === '""') {
