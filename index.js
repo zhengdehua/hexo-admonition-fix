@@ -160,13 +160,13 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
         // 处理引用行，针对 > 后面有内容的情况
         if (quoteLine1RegExp.test(line)) {
-          block = removeLastBrs(block) + '\n' + line + '<br>';
+          block = removeLastBr(block) + '\n' + line + '<br>';
           continue;
         }
 
         // 处理引用行，针对 > 后面没有内容的情况
         if (quoteLine2RegExp.test(line)) {
-          block = removeLastBrs(block) + line;
+          block = removeLastBr(block) + line;
           continue;
         }
 
