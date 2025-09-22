@@ -137,11 +137,6 @@ hexo.extend.filter.register('before_post_render', function (data) {
           continue;
         }
 
-        if (block.endsWith('</hexoPostRenderCodeBlock>')) {
-          block += '\n\n' + line;
-          continue;
-        }
-
         // 处理表格的每一行
         if (tableLineRegExp.test(line)) {
           block = removeLastBrs(block) + '\n' + line;
@@ -149,32 +144,34 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         // 处理表格的结尾，只要上面的表格还没结束，就不会到达这里
-        if (tableSuffixRegExp.test(block)) {
-          block += '\n\n' + line;
+        // 也处理代码块的结尾
+        if (tableSuffixRegExp.test(block)
+          || block.endsWith('</hexoPostRenderCodeBlock>')) {
+          block = (line == '') ? (block + '\n\n<br>\n\n') : (block + '\n\n' + line);
+          continue;
+        }
+
+        // 处理空行，表示一个空白的段落
+        if (line == '') {
+          block = removeLastBr(block) + '\n\n<br>\n\n';
           continue;
         }
 
         // 处理列表行
         if (listLineRegExp.test(line)) {
-          block += '\n' + line + '<br>';
+          block += '\n' + line;
           continue;
         }
 
         // 处理引用行，针对 > 后面有内容的情况
         if (quoteLine1RegExp.test(line)) {
-          block = removeLastBr(block) + '\n' + line + '<br>';
+          block = removeLastBr(block) + '\n' + line;
           continue;
         }
 
         // 处理引用行，针对 > 后面没有内容的情况
         if (quoteLine2RegExp.test(line)) {
           block = removeLastBr(block) + line;
-          continue;
-        }
-
-        // 处理空行，表示段落结束
-        if (line == '') {
-          block = removeLastBr(block) + '\n\n' + '<br>' + '\n\n';
           continue;
         }
 
