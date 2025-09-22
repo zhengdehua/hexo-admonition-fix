@@ -74,14 +74,16 @@ hexo.extend.filter.register('after_generate', function() {
 });
 
 var removeLastBr = function(line) {
-  const lastBrRegExp = /<br\/?>$/i;
-  return line.replace(lastBrRegExp, '');
+  return line.replace(/<br\/?>$/i, '');
 };
 
 var removeLastBrs = function(line) {
-  const allLastBrRegExp = /(<br\/?>)+$/i;
-  return line.replace(allLastBrRegExp, '');
-}
+  return line.replace(/(<br\/?>)+$/i, '');
+};
+
+var removeLastBreaks = function (str) {
+  return str.replace(/(?:<br\/?>|\n)+$/gi, '');
+};
 
 const mathList = []; // 存储提取的公式
 
@@ -172,7 +174,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
         // 处理空行，表示段落结束
         if (line == '') {
-          block = removeLastBr(block) + '\n\n';
+          block = removeLastBr(block) + '\n\n' + '<br>' + '\n\n';
           continue;
         }
 
@@ -180,7 +182,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
         block = removeLastBr(block) + '<br>' + line;
       }
 
-      block = removeLastBrs(block);
+      block = removeLastBreaks(block);
       block = marked.parse(block);
 
       if (p3.replace(/\s+/g, '') === '""') {
