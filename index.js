@@ -4,7 +4,7 @@ var marked = require('marked');
 
 var css = `
 .admonition {
-  padding-left: 0.5em !important;
+  padding-left: 1em !important;
   margin: 1.5625em 0;
   padding: 0rem;
   overflow: hidden;
@@ -17,7 +17,7 @@ var css = `
 
 p.admonition-title {
   position: relative;
-  margin: -.6rem -.6rem .8em -.6rem !important;
+  margin: -.6rem -.6rem .8em -.8rem !important;
   padding: .4rem .6rem .4rem 1rem;
   font-weight: 700;
   background-color: rgba(66, 185, 131, .1);
