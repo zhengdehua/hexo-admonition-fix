@@ -1,6 +1,6 @@
 {
   "name": "hexo-admonition-fix",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Add block-styled admonition to hexo, e.g. note, warning or error. | Hexo内容辅助插件，支持向文档中添加如提示、警告、错误等块式内容。",
   "homepage": "https://github.com/zhengdehua/hexo-admonition-fix",
   "main": "index",

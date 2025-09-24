@@ -17,7 +17,7 @@ var css = `
 
 p.admonition-title {
   position: relative;
-  margin: -.6rem -.6rem .8em -.8rem !important;
+  margin: -.6rem -.6rem .8em -1rem !important;
   padding: .4rem .6rem .4rem 1rem;
   font-weight: 700;
   background-color: rgba(66, 185, 131, .1);
