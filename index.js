@@ -12,7 +12,6 @@ var css = `
   border-left: .3rem solid #42b983;
   border-radius: .3rem;
   box-shadow: 0 0.1rem 0.4rem rgba(0, 0, 0, .05), 0 0 0.05rem rgba(0, 0, 0, .1);
-  background-color: #fafafa;
 }
 
 p.admonition-title {
@@ -20,7 +19,7 @@ p.admonition-title {
   margin: -.6rem -.6rem .8em -1rem !important;
   padding: .4rem .6rem .4rem 1rem;
   font-weight: 700;
-  background-color: rgba(66, 185, 131, .1);
+  background-color: rgb(48, 202, 113, .2)
 }
 
 .info>.admonition-title {
