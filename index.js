@@ -64,6 +64,10 @@ p.admonition-title {
 .admonition>p:not(.admonition-title) {
   margin-bottom: 2px !important;
 }
+
+.admonition ul, .admonition ol {
+  padding-inline-start: 25px !important;
+}
 `;
 
 // 直接注入CSS内容到网站的head中
