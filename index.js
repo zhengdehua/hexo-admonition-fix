@@ -116,7 +116,7 @@ hexo.extend.filter.register('before_post_render', function (data) {
   let admonitionRegExp = new RegExp('(^!!!\\s*)(note|info|warning|error)(.*\\n)((^\\s{2}.*\\n)+)', 'gmi');
   let tableLineRegExp = new RegExp('^\\s*\\|(.+\\|)+$');
   let tableSuffixRegExp = new RegExp('\\s*\\|(.+\\|)+$');
-  let listLineRegExp = new RegExp('^\\s*-.+$');
+  let listLineRegExp = new RegExp('^\\s*-\\s+.+$');
   let quoteLine1RegExp = new RegExp('^\\s*>\\s*.+$');
   let quoteLine2RegExp = new RegExp('^\\s*>\\s*$');
   let canReplace = data.mathjax || hexo.theme.config.math.per_page;
