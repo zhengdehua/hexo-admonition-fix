@@ -117,8 +117,9 @@ hexo.extend.filter.register('before_post_render', function (data) {
   let tableLineRegExp = new RegExp('^\\s*\\|(.+\\|)+$');
   let tableSuffixRegExp = new RegExp('\\s*\\|(.+\\|)+$');
   let listLineRegExp = new RegExp('^\\s*-\\s+.+$');
-  let quoteLine1RegExp = new RegExp('^\\s*>\\s*.+$');
-  let quoteLine2RegExp = new RegExp('^\\s*>\\s*$');
+  let quoteLine1RegExp = new RegExp('^\\s*>\\s*.*$');
+  let quoteLine2RegExp = new RegExp('\\s*>\\s*$');
+  let lineBreakRegExp = new RegExp('^\\s*\\\\s*$');
   let canReplace = data.mathjax || hexo.theme.config.math.per_page;
 
   if (canReplace) {
@@ -133,6 +134,12 @@ hexo.extend.filter.register('before_post_render', function (data) {
 
       for (const v of p4) {
         line = v.replace(/^ {2}/, ''); // 去除插件本身的缩进空格
+
+        // 处理空行，表示一个空白的段落
+        if (line == '') {
+          block = removeLastBr(block) + '\n\n<br>\n\n';
+          continue;
+        }
 
         if (block == '' || block.endsWith('\n\n')
           || block.endsWith('{% raw %}') || line == '{% endraw %}') {
@@ -154,12 +161,6 @@ hexo.extend.filter.register('before_post_render', function (data) {
           continue;
         }
 
-        // 处理空行，表示一个空白的段落
-        if (line == '') {
-          block = removeLastBr(block) + '\n\n<br>\n\n';
-          continue;
-        }
-
         // 处理列表行
         if (listLineRegExp.test(line)) {
           block += '\n' + line;
@@ -173,8 +174,14 @@ hexo.extend.filter.register('before_post_render', function (data) {
         }
 
         // 处理引用行，针对 > 后面没有内容的情况
-        if (quoteLine2RegExp.test(line)) {
-          block = removeLastBr(block) + line;
+        if (quoteLine2RegExp.test(block)) {
+          block += line;
+          continue;
+        }
+
+        // 处理换行符，表示是同一段落的内容
+        if (lineBreakRegExp.test(line)) {
+          block = removeLastBr(block) + '<br><br>';
           continue;
         }
 
